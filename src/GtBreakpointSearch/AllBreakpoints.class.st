@@ -4,13 +4,18 @@ Class {
 	#category : #GtBreakpointSearch
 }
 
+{ #category : #accessing }
+AllBreakpoints class >> breakpoints [
+	^ self haltReferencesWithoutTests result
+]
+
 { #category : #views }
 AllBreakpoints class >> gtBreakpointsFor: aView [
 	<gtClassView>
 	^ aView forward
 		title: 'Breakpoints';
 		priority: 1;
-		object: (MessageSend receiver: self selector: #haltReferencesWithoutTests);
+		object: [ self haltReferencesWithoutTests ];
 		view: #gtItemsFor:
 ]
 
@@ -23,8 +28,8 @@ AllBreakpoints class >> haltReferences [
 
 { #category : #accessing }
 AllBreakpoints class >> haltReferencesWithoutTests [
-	^ (self haltReferences
+	^ self haltReferences
 		select: [ :aMethod | 
 			(aMethod pragmaAt: #gtExample) isNil
-				and: [ (aMethod methodClass isKindOf: TestCase class) not ] ]) result
+				and: [ (aMethod methodClass isKindOf: TestCase class) not ] ]
 ]

@@ -6,12 +6,11 @@ RPackage >> gtBreakpointsFor: aView [
 	<gtView>
 	| breakpoints |
 	breakpoints := self name gtPackageMatches
-			& (Halt gtReferences | #Halt gtReferences | #halt gtReferences
-					| #halt: gtReferences | #haltIfNil gtReferences
-					| #haltOnCount: gtReferences | #haltOnce gtReferences).
+			& AllBreakpoints haltReferencesWithoutTests.
 	breakpoints size = 0 ifTrue: [ ^ aView empty ].
-	^ aView explicit
+	^ aView forward
 		title: 'Breakpoints';
 		priority: -2;
-		stencil: [ breakpoints ]
+		object: [ breakpoints ];
+		view: #gtItemsFor:
 ]
