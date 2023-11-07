@@ -7,17 +7,24 @@ Class {
 { #category : #views }
 AllBreakpoints class >> gtBreakpointsFor: aView [
 	<gtClassView>
-	| breakpoints packages |
-	breakpoints := #Halt gtReferences | #halt gtReferences
-		| #halt: gtReferences | #haltIfNil gtReferences
-		| #haltOnCount: gtReferences | #haltOnce gtReferences.
-	breakpoints size = 0
-		ifTrue: [ ^ aView empty ].
-	packages := Set new.
-	breakpoints do: [ :each | packages add: each package ].
 	^ aView forward
 		title: 'Breakpoints';
 		priority: 1;
-		object: packages asArray sorted;
+		object: (MessageSend receiver: self selector: #haltReferencesWithoutTests);
 		view: #gtItemsFor:
+]
+
+{ #category : #views }
+AllBreakpoints class >> haltReferences [
+	^ Halt gtReferences | #Halt gtReferences | #halt gtReferences
+		| #halt: gtReferences | #haltIfNil gtReferences | #haltOnCount: gtReferences
+		| #haltOnce gtReferences
+]
+
+{ #category : #accessing }
+AllBreakpoints class >> haltReferencesWithoutTests [
+	^ (self haltReferences
+		select: [ :aMethod | 
+			(aMethod pragmaAt: #gtExample) isNil
+				and: [ (aMethod methodClass isKindOf: TestCase class) not ] ]) result
 ]
