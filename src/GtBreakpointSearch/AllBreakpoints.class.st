@@ -21,9 +21,11 @@ AllBreakpoints class >> gtBreakpointsFor: aView [
 
 { #category : #views }
 AllBreakpoints class >> haltReferences [
-	^ Halt gtReferences | #Halt gtReferences | #halt gtReferences
-		| #halt: gtReferences | #haltIfNil gtReferences | #haltOnCount: gtReferences
+	^ "#Halt gtReferences |" #halt gtReferences | #halt: gtReferences
+		| #haltIfNil gtReferences | #haltOnCount: gtReferences
 		| #haltOnce gtReferences
+		| (RBParser parseExpression: 'Halt once') gtASTMatches
+		| (RBParser parseExpression: 'Halt now') gtASTMatches
 ]
 
 { #category : #accessing }

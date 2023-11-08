@@ -1,12 +1,7 @@
-Extension { #name : #Object }
+Extension { #name : #ProtoObject }
 
 { #category : #'*GtBreakpointSearch' }
-Object class >> breakpointsInClass [
-	^ self gtMethodsInClass & AllBreakpoints haltReferencesWithoutTests
-]
-
-{ #category : #'*GtBreakpointSearch' }
-Object class >> gtBreakpointsFor: aView [
+ProtoObject class >> gtBreakpointsFor: aView [
 	<gtView>
 	<gtClassView>
 	| breakpoints |
