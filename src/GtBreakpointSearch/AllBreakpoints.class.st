@@ -23,8 +23,9 @@ AllBreakpoints class >> gtBreakpointsFor: aView [
 AllBreakpoints class >> haltReferences [
 	| haltSelectors |
 	haltSelectors := self haltSelectors.
-	^ GtSearchMethodConditionsFilter
-		condition: [ :aMethod | aMethod messages includesAny: haltSelectors ]
+	^ (haltSelectors
+		inject: GtSearchNullFilter new
+		into: [ :sum :each | sum | each gtReferences ]) | Halt gtReferences
 ]
 
 { #category : #accessing }
