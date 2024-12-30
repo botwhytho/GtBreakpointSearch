@@ -21,11 +21,10 @@ AllBreakpoints class >> gtBreakpointsFor: aView [
 
 { #category : #views }
 AllBreakpoints class >> haltReferences [
-	^ "#Halt gtReferences |" #halt gtReferences | #halt: gtReferences
-		| #haltIfNil gtReferences | #haltOnCount: gtReferences
-		| #haltOnce gtReferences
-		| (RBParser parseExpression: 'Halt once') gtASTMatches
-		| (RBParser parseExpression: 'Halt now') gtASTMatches
+	| haltSelectors |
+	haltSelectors := self haltSelectors.
+	^ GtSearchMethodConditionsFilter
+		condition: [ :aMethod | aMethod messages includesAny: haltSelectors ]
 ]
 
 { #category : #accessing }
@@ -34,4 +33,11 @@ AllBreakpoints class >> haltReferencesWithoutTests [
 		select: [ :aMethod | 
 			(aMethod pragmaAt: #gtExample) isNil
 				and: [ (aMethod methodClass isKindOf: TestCase class) not ] ]
+]
+
+{ #category : #views }
+AllBreakpoints class >> haltSelectors [
+	^ (Object gtMethodsInClass
+		select: [ :aMethod | aMethod selector includesSubstring: 'halt' ]) contents
+		collect: #selector
 ]
