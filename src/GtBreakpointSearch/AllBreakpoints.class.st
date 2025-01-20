@@ -23,17 +23,18 @@ AllBreakpoints class >> gtBreakpointsFor: aView [
 AllBreakpoints class >> haltReferences [
 	| haltSelectors |
 	haltSelectors := self haltSelectors.
-	^ (haltSelectors
-		inject: GtSearchNullFilter new
+	^ (haltSelectors allButFirst
+		inject: haltSelectors first gtReferences
 		into: [ :sum :each | sum | each gtReferences ]) | Halt gtReferences
 ]
 
 { #category : #accessing }
 AllBreakpoints class >> haltReferencesWithoutTests [
 	^ self haltReferences
-		select: [ :aMethod | 
-			(aMethod pragmaAt: #gtExample) isNil
-				and: [ (aMethod methodClass isKindOf: TestCase class) not ] ]
+		& (GtSearchMethodConditionsFilter
+				condition: [ :aMethod | 
+					(aMethod pragmaAt: #gtExample) isNil
+						and: [ (aMethod methodClass isKindOf: TestCase class) not ] ])
 ]
 
 { #category : #views }
