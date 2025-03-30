@@ -21,6 +21,8 @@ AllBreakpoints class >> gtBreakpointsFor: aView [
 
 { #category : #views }
 AllBreakpoints class >> haltReferences [
+	"The below does NOT use `GtSearchNullFilter new` and instead uses `allButFirst` and injects the first filter because otherwise, using the null filter would prevent 'By Class' & 'By Package' tabs in search tool. Do NOT change back or this useful functionality will break"
+
 	| haltSelectors |
 	haltSelectors := self haltSelectors.
 	^ (haltSelectors allButFirst
